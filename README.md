@@ -2,7 +2,7 @@
 
 Basically, this crawler implements the crawling of specific currency history data on https://coinmarketcap.com, and its output data format can be found on the following page：
 
-<img src="/Users/yuhangxue/Library/Application Support/typora-user-images/image-20210603191606754.png" alt="image-20210603191606754" style="zoom:50%;" />
+<img src="https://i.loli.net/2021/06/03/3MeqaQWLrImBpcK.png" alt="image-20210603191606754" style="zoom:50%;" />
 
 The output data is in .csv format:
 
@@ -63,6 +63,6 @@ Examples:
 ### Cautions
 
 - ⚠️ Python version >= 3.7 required
-- 🌝 For query by name(s), i simply write a $\mathcal{O(n})$ scan to search for a given name's corresponding id, so it may be a little bit slow now. By the way, every map update takes one credit, for more information, check out:[CoinMarketCap API Documentation](https://coinmarketcap.com/api/documentation/v1/)
+- 🌝 For query by name(s), i simply write a linear scan to search for the given name's corresponding id, so it may be a little bit slow now. By the way, every map update takes one credit, for more information, check out:[CoinMarketCap API Documentation](https://coinmarketcap.com/api/documentation/v1/)
 - ⭕️ If any library missing, use `pip`/`pip3` to install them.
 - 😭 As this crawler has not been rigorously tested, there may be unexpected bugs.
