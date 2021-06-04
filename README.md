@@ -19,11 +19,11 @@ The output data is in .csv format:
 
 ### How to use
 
-First, get your own API key from [CoinMarketCap](https://coinmarketcap.com/api/). Simply register and log in, it's easy. ![image-20210603195623080](https://i.loli.net/2021/06/03/gDOIuvswKhFVAaS.png)
+For convenience, I have written a simple command line client. 
 
-For convenience, I have written a simple command line client. To get the usage, input  `python client.py -h`
+To get the usage of this client, simply input  `python client.py -h`
 
-![image-20210603194225048](https://i.loli.net/2021/06/03/OV89bzHBYTLXKx5.png)
+![image-20210604151244954](https://i.loli.net/2021/06/04/uhAcSEx8Lf6d2ps.png)
 
 Examples:
 
@@ -33,14 +33,20 @@ Examples:
     python client.py 2020-01-01 2021-01-01 -l 100
     ```
 
-     Note that if API key is not given, this crawler will use local map (i.e. ./map_data.txt) for crawling.
+    You can use `-l` or `--limit` to set the number of currencies you want to crawl, and use `-i` or `--index` to specify the start index:
 
-2. To obtain currency data by name, you need to provide the API key. Use `-a` or `--api` to do this.
+    ```
+    python client.py 2020-01-01 2021-01-01 -l 100 -i 500
+    ```
+
+    The code above crawl the data of currencies ranked from 500 to 600.
+
+2. To obtain currency data by name
 
     - To get the data of Bitcoin of year 2019:
 
         ```
-        python client.py 2019-01-01 2020-01-01 -a <your_api_key> -n "Bitcoin"
+        python client.py 2019-01-01 2020-01-01  -n "Bitcoin"
         ```
 
     - To get the data of Bitcoin & Cardano, first create a file `test.txt`:
@@ -53,22 +59,18 @@ Examples:
         Then use `-f` or `--file`
 
         ```
-        python client.py 2019-01-01 2020-01-01 -a <your_api_key> -f ./test.txt
+        python client.py 2019-01-01 2020-01-01  -f ./test.txt
         ```
 
-    - You can use `-l` or `--limit` to set the number of currencies you want to crawl, and use `-i` or `--index` to specify the start index
-    
-        ```
-        python client.py 2020-01-01 2021-01-01 -l 100 -i 500
-        ```
-    
-        The code above crawl the data of currencies ranked from 500 to 600.
+3. A currency to ID mapping is stored locally and you can use your own API key to update the local mapping. By default the first 5000 entries are updated, you can change this setting in the source code. Use `-a` or `--api` to do this:
+
+    ```
+    python client.py -a <your_api_key>
+    ```
 
 ### Cautions
 
-- ⚠️ Python version >= 3.7 required
-- 🌝 For query by name(s), i simply write a linear scan to search for the given name's corresponding id, so it may be a little bit slow now. By the way, every map update takes one credit, for more information, check out:[CoinMarketCap API Documentation](https://coinmarketcap.com/api/documentation/v1/)
+- ⚠️ Python ***version >= 3.7*** required
 - ⭕️ If any library missing, use `pip`/`pip3` to install them.
-- 😭 As this crawler has not been rigorously tested, there may be unexpected bugs:
-    - 😅 I am sorry, but because I accidentally used a synchronous IO model, it is best to keep the maximum number of records fetched at one time under 300. Requests with a number above 300 may cause IO blocking. This will be fixed sooner.
+- 😭 As this crawler has not been rigorously tested, there may be unexpected bugs. You can ***issue*** or ***pull requests*** if you have any advice to improve this simple project.
 

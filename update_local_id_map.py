@@ -4,7 +4,7 @@ from requests import Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 
 
-def get_id_map( api_key):
+def update_local_id_map( api_key):
     """
     Get IDs map
     :param api_key: your private api key
