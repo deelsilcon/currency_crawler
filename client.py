@@ -1,9 +1,12 @@
 import argparse
 import sys
+import grequests
 from datetime import datetime
-
-from crawl_currency import CurrencyCrawl
+from multiprocessing import Pool
+from crawl_currency import *
 from get_id_map import get_id_map
+
+from multiprocessing.dummy import Pool as ThreadPool
 
 
 def process_date(date):
@@ -19,7 +22,6 @@ def check():
 
 def main():
     check()
-    crawl = CurrencyCrawl()
     string_desc = "A simple crawler for historical data of cryptocurrencies. Be careful to input date with " \
                   "format Y-M-D. "
     parser = argparse.ArgumentParser(description=string_desc)
@@ -33,6 +35,7 @@ def main():
     group.add_argument("-n", '--name',
                        help="Used for crawl single currency. Notice that by setting this parameter, limit will be "
                             "ignored.")
+    group.add_argument("-i", '--index', help="The start index of the data we want to process.", default=1, type=int)
     group.add_argument("-f", '--file',
                        help="Crawl currencies with names specified in a file. Only one name is allowed per line")
     parser.add_argument('-v', '-version', action='version',
@@ -44,10 +47,11 @@ def main():
     name = args.name
     limit = args.limit
     file = args.file
+    index = args.index
     start_date = process_date(start)
     end_date = process_date(end)
     if file is not None:
-        if crawl.crawl_list_currency(file, start_date, end_date, api_key) == -1:
+        if crawl_list_currency(file, start_date, end_date, api_key) == -1:
             print("Something wrong! Plz check the names in the file.")
             sys.exit(1)
         else:
@@ -59,17 +63,25 @@ def main():
             print("Please offer your API key!")
             sys.exit(1)
         else:
-            if crawl.crawl_single_currency(name, start_date, end_date, api_key) == -1:
+            if crawl_single_currency(name, start_date, end_date, api_key) == -1:
                 print(f"Sorry, can't find coin {name}")
                 sys.exit(1)
             else:
                 print(f"Crawl {name} finished!")
                 sys.exit(0)
     if api_key is not None:
-        if get_id_map(limit, api_key) == -1:
+        if get_id_map(api_key) == -1:
             print("Wrong API key! Check your API key and try again!")
             sys.exit(1)
-    crawl.run(limit, start_date, end_date)
+
+    delta = 100
+    t = limit // 100 + 1
+    with Pool(processes=8) as pool:
+        groups = [(index + delta * i, index + delta * (i + 1), start_date, end_date, index + limit) for i in range(t)]
+        # groups = [(1, 2000, start_date, end_date)]
+        pool.map(run, groups)
+
+
 
 
 if __name__ == '__main__':

@@ -56,13 +56,19 @@ Examples:
         python client.py 2019-01-01 2020-01-01 -a <your_api_key> -f ./test.txt
         ```
 
-        
-
-
+    - You can use `-l` or `--limit` to set the number of currencies you want to crawl, and use `-i` or `--index` to specify the start index
+    
+        ```
+        python client.py 2020-01-01 2021-01-01 -l 100 -i 500
+        ```
+    
+        The code above crawl the data of currencies ranked from 500 to 600.
 
 ### Cautions
 
 - ⚠️ Python version >= 3.7 required
 - 🌝 For query by name(s), i simply write a linear scan to search for the given name's corresponding id, so it may be a little bit slow now. By the way, every map update takes one credit, for more information, check out:[CoinMarketCap API Documentation](https://coinmarketcap.com/api/documentation/v1/)
 - ⭕️ If any library missing, use `pip`/`pip3` to install them.
-- 😭 As this crawler has not been rigorously tested, there may be unexpected bugs.
+- 😭 As this crawler has not been rigorously tested, there may be unexpected bugs:
+    - 😅 I am sorry, but because I accidentally used a synchronous IO model, it is best to keep the maximum number of records fetched at one time under 300. Requests with a number above 300 may cause IO blocking. This will be fixed sooner.
+

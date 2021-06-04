@@ -1,28 +1,29 @@
 import json
 
-import requests
+from requests import Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 
 
-def get_id_map(limit, api_key):
+def get_id_map( api_key):
     """
     Get IDs map
-    :param limit: the number of currency id we want to store locally
     :param api_key: your private api key
     :return: 0 for success and -1 for failure
     """
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/map'
     parameters = {
-        'start': '1',
-        'limit': f'{limit}',
+        'start': 1,
+        'limit': 5000,
         'sort': 'cmc_rank'
     }
     headers = {
         'Accepts': 'application/json',
         'X-CMC_PRO_API_KEY': f"{api_key}",
     }
+    session = Session()
+    session.headers.update(headers)
     try:
-        response = requests.get(url, headers=headers, params=parameters)
+        response = session.get(url, params=parameters)
         if response.status_code != 200:
             return -1
         data = json.loads(response.text)
